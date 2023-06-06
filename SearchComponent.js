@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { View, TextInput, Button, FlatList, Text } from 'react-native';
 import axios from 'axios';
+import { styles } from './styles';
 
 const SearchComponent = () => {
   const [query, setQuery] = useState('');
@@ -26,7 +27,11 @@ const SearchComponent = () => {
       <FlatList
         data={repositories}
         keyExtractor={(item) => item.id.toString()}
-        renderItem={({ item }) => <Text>{item.full_name}</Text>}
+        renderItem={({ item }) => (
+          <View style={{ marginVertical: 10 }}>
+            <Text>{item.full_name}</Text>
+          </View>
+        )}
       />
     </View>
   );
