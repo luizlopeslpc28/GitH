@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
-import { View, TextInput, Button, FlatList, Text } from 'react-native';
+import { View, TextInput, Button, FlatList, Text, StyleSheet, TouchableOpacity, Linking } from 'react-native';
 import axios from 'axios';
-import { styles } from './styles';
 
 const SearchComponent = () => {
   const [query, setQuery] = useState('');
@@ -16,9 +15,15 @@ const SearchComponent = () => {
     }
   };
 
+  const handleRepositoryPress = (url) => {
+    Linking.openURL(url);
+  };
+
   return (
-    <View>
+    <View style={styles.container}>
+      <Text style={styles.theme}>BUSCAR REPOSITÓRIO</Text>
       <TextInput
+        style={styles.input}
         placeholder="Digite um termo de pesquisa"
         value={query}
         onChangeText={(text) => setQuery(text)}
@@ -28,13 +33,52 @@ const SearchComponent = () => {
         data={repositories}
         keyExtractor={(item) => item.id.toString()}
         renderItem={({ item }) => (
-          <View style={{ marginVertical: 10 }}>
-            <Text>{item.full_name}</Text>
-          </View>
+          <TouchableOpacity onPress={() => handleRepositoryPress(item.html_url)}>
+            <View style={styles.repositoryContainer}>
+              <Text style={styles.repositoryName}>{item.full_name}</Text>
+              <Text style={styles.repositoryDescription}>{item.description}</Text>
+            </View>
+          </TouchableOpacity>
         )}
       />
     </View>
   );
 };
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    padding: 20,
+    backgroundColor: '#fff',
+  },
+  theme: {
+    fontSize: 20,
+    fontWeight: 'bold',
+    marginBottom: 20,
+  },
+  input: {
+    height: 40,
+    width: '100%',
+    borderColor: '#ccc',
+    borderWidth: 1,
+    marginBottom: 10,
+    paddingHorizontal: 10,
+  },
+  repositoryContainer: {
+    backgroundColor: '#f5f5f5',
+    padding: 10,
+    marginBottom: 10,
+    borderRadius: 5,
+  },
+  repositoryName: {
+    fontSize: 16,
+    fontWeight: 'bold',
+    marginBottom: 5,
+  },
+  repositoryDescription: {
+    fontSize: 14,
+    color: '#666',
+  },
+});
 
 export default SearchComponent;
